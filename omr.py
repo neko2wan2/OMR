@@ -2,9 +2,11 @@ import cv2
 import numpy as np
 import util
 #
-path = "test3.jpg"
+path = "test4.jpg"
 imgW =700
 imgH =700
+choices = 4
+questions =10
 #
 
 #ImageConversion
@@ -25,11 +27,36 @@ biggestContour = util.getCornerPoints(rectCon[0])
 if biggestContour.size !=0:
     
     biggestContour=util.reorder(biggestContour)
-    print(biggestContour)
     pt1 = np.float32(biggestContour)
     pt2 = np.float32([[0,0],[imgW,0],[0,imgH],[imgW,imgH]])
     matrix = cv2.getPerspectiveTransform(pt1,pt2)
     imgWarpColored = cv2.warpPerspective(img,matrix,(imgW,imgH))
+        
+    imgWarpGray = cv2.cvtColor(imgWarpColored,cv2.COLOR_BGR2GRAY)
+    imgThresh = cv2.threshold(imgWarpGray,180,255,cv2.THRESH_BINARY_INV)[1]
     
-    cv2.imshow("test",imgWarpColored)
-    cv2.waitKey(0)
+    ans = util.splitImg(imgThresh)
+    
+    pixelVal= np.zeros((questions,choices))
+    countC=0
+    countR=0
+    
+    for image in ans:
+       totalPixels = cv2.countNonZero(image)
+       pixelVal[countR][countC] = totalPixels
+       countC +=1
+        
+       if (countC == choices): countR +=1; countC=0
+    
+    print(pixelVal)
+    ansIndex=[]
+    
+    for x in range(0,questions):
+        arr = pixelVal[x]
+        
+        indexVal = np.where(arr==np.amax(arr))
+        ansIndex.append(indexVal[0][0])
+    
+    print(ansIndex)
+    #cv2.imshow("test",imgThresh)
+    #cv2.waitKey(0)

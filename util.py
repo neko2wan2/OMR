@@ -1,6 +1,10 @@
 import cv2
 import numpy as np
 
+#
+choices = 4
+questions = 10
+#
 def rectContour(contours):
     
     rectCon= []
@@ -35,3 +39,14 @@ def reorder(rectPoints):
     rectPointsNew[2]= rectPoints[np.argmax(diff)]
     
     return rectPointsNew
+
+def splitImg(img):
+
+    rows = np.vsplit(img,questions)
+    ans = []
+    for r in rows:
+        cols= np.hsplit(r,choices)
+        for box in cols:
+            ans.append(box)
+    
+    return ans
