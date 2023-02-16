@@ -43,10 +43,13 @@ def reorder(rectPoints):
 def splitImg(img):
 
     rows = np.vsplit(img,questions)
+    
     ans = []
     for r in rows:
         cols= np.hsplit(r,choices)
         for box in cols:
             ans.append(box)
     
+    cv2.imshow("test",ans[1])
+    cv2.waitKey(0)
     return ans

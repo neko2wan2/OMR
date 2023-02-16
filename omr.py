@@ -2,11 +2,13 @@ import cv2
 import numpy as np
 import util
 #
-path = "test4.jpg"
+path = "test3.jpg"
 imgW =700
 imgH =700
 choices = 4
-questions =10
+questions = 10
+scoreAns=[2,0,3,1,2,3,0,2,3,1]
+score = 0
 #
 
 #ImageConversion
@@ -33,7 +35,7 @@ if biggestContour.size !=0:
     imgWarpColored = cv2.warpPerspective(img,matrix,(imgW,imgH))
         
     imgWarpGray = cv2.cvtColor(imgWarpColored,cv2.COLOR_BGR2GRAY)
-    imgThresh = cv2.threshold(imgWarpGray,180,255,cv2.THRESH_BINARY_INV)[1]
+    imgThresh = cv2.threshold(imgWarpGray,190,255,cv2.THRESH_BINARY_INV)[1]
     
     ans = util.splitImg(imgThresh)
     
@@ -41,14 +43,16 @@ if biggestContour.size !=0:
     countC=0
     countR=0
     
+ #pixel count   
     for image in ans:
        totalPixels = cv2.countNonZero(image)
        pixelVal[countR][countC] = totalPixels
        countC +=1
         
        if (countC == choices): countR +=1; countC=0
-    
     print(pixelVal)
+    
+ #checking answers   
     ansIndex=[]
     
     for x in range(0,questions):
@@ -57,6 +61,10 @@ if biggestContour.size !=0:
         indexVal = np.where(arr==np.amax(arr))
         ansIndex.append(indexVal[0][0])
     
-    print(ansIndex)
-    #cv2.imshow("test",imgThresh)
-    #cv2.waitKey(0)
+    for x in range(0,questions):
+        if ansIndex[x] == scoreAns[x]:
+            score+=1
+            
+    
+    print("Score: ",score," / ",questions)
+    
