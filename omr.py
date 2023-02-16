@@ -16,4 +16,8 @@ imgCanny = cv2.Canny(imgBlur,10,50)
 contours,hierarchy = cv2.findContours(imgCanny,cv2.RETR_EXTERNAL,cv2.CHAIN_APPROX_NONE)
 
 #findRectangles
-util.rectContour(contours)
+rectCon = util.rectContour(contours)
+biggestContour = util.getCornerPoints(rectCon[0])
+
+util.reorder(biggestContour)
+    
