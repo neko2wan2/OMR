@@ -26,12 +26,12 @@ def getCornerPoints(cont):
 def reorder(rectPoints):
 
     rectPoints = rectPoints.reshape((4,2))
-    rectPointsNew= np.seroz((4,1,2),np.int32)
+    rectPointsNew= np.zeros((4,1,2),np.int32)
     add = rectPoints.sum(1)
     rectPointsNew[0]= rectPoints[np.argmin(add)]
     rectPointsNew[3]= rectPoints[np.argmax(add)]
     diff = np.diff(rectPoints,axis=1)
     rectPointsNew[1]= rectPoints[np.argmin(diff)]
-    rectPointsNew[2]= rectPoints[np.argmin(diff)]
+    rectPointsNew[2]= rectPoints[np.argmax(diff)]
     
     return rectPointsNew
